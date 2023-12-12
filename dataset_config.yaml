@@ -1,7 +1,7 @@
 path: /Users/sw20039189/fiftyone/open-images-v7/yolov8/data
 train: images/train
-val: images/train
-test: images/train
+val: images/validation
+#test: images/train
 
 # Classes
 names:
