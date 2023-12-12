@@ -1,0 +1,10 @@
+path: /Users/sw20039189/fiftyone/open-images-v7
+train: train/data
+val: train/data
+test: train/data
+
+# Classes
+names:
+  0: Vehicle registration plate
+  1: Accordion
+

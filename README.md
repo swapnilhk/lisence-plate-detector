@@ -1,11 +1,16 @@
 # lisence-plate-detector
 
 ## Prerequisites
-Python 3.7 - 3.10
-PIP
+Python 3.7 - 3.10, PIP
 
 ## Python Virtual Environment Setup
 https://docs.voxel51.com/getting_started/virtualenv.html
+
+## Image Dataset
+https://storage.googleapis.com/openimages/web/index.html
+
+### Dataset Format
+https://docs.ultralytics.com/datasets/detect/open-images-v7/
 
 ## FiftyOne Installation
 https://docs.voxel51.com/getting_started/install.html
