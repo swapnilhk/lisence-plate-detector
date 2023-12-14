@@ -66,8 +66,7 @@ with open(SRC_DATASET_DIR + '/train/metadata/classes.csv', 'r') as open_images_v
         if match:
            open_images_lable_name_to_yolo_class_index[match.group(1)]=inverted_yolov8_class_map[match.group(2)]
            label_name_regex += match.group(1) + '|'
-  g  =  removeTrailingCharacter(label_name_regex, '|')  # remove trailing '|' if it exists
-
+  label_name_regex  =  removeTrailingCharacter(label_name_regex, '|')  # remove trailing '|' if it exists
 
 dataset_splits = ['train', 'validation']
 for split in dataset_splits:
@@ -85,7 +84,10 @@ for split in dataset_splits:
   # convert data to yolov8 format
   with open(SRC_DATASET_DIR + '/'+split+'/labels/detections.csv', 'r') as open_images_v7_detections:
     for line in open_images_v7_detections:
-        match = re.search(detections_expression, line)    
-        if match:
-          print(match.group(0))
-          addYoloV8FormatDataToFile(split, match)
+        # for efficieicy, match a smaller regex first before we go for full blown regex match
+        pre_match = re.search(label_name_regex, line)
+        if pre_match:
+          match = re.search(detections_expression, line)
+          if match:
+            print(match.group(0))
+            addYoloV8FormatDataToFile(split, match)
