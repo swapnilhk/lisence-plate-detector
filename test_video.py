@@ -1,5 +1,6 @@
+# Credits: https://github.com/computervisioneng/train-yolov8-custom-dataset-step-by-step-guide/tree/master/local_env/predict_video.py
 import os
-import ultralytics as yolo
+from ultralytics import YOLO as yolo
 import cv2
 
 VIDEOS_DIR = os.path.join('.', 'videos')
@@ -12,12 +13,10 @@ ret, frame = cap.read()
 
 H, W, _ = frame.shape
 
-out = cv2.VideoWriter(video_path_out, cv2.VideoWriter_fourcc(*'MP4V')), int(cap.get(cv2.CAP_PROP_FPS)), (H, W))
-
-model_path = os.path.join('.', 'runs', 'train27', 'weights', 'last.pt')
+out = cv2.VideoWriter(video_path_out, cv2.VideoWriter_fourcc(*'MP4V'), int(cap.get(cv2.CAP_PROP_FPS)), (W, H))
 
 # load models
-model = yolo(model_path)
+model = yolo("/Users/sw20039189/GitHub/lisence-plate-detector/runs/detect/train/weights/last.pt")
 
 threshold = 0.5
 
@@ -26,13 +25,12 @@ while ret:
     for result in results.boxes.data.tolist():
         x1, y1, x2, y2, score, class_id = result
         if score > threshold:
-            cv2.rectangle(frame, (int(x1), int(y1), int(x2), int(y2)), (0, 255, 0), 4)
+            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
             cv2.putText(frame, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0. 255, 0), 3, cv2.LINE_AA)
-            out.write(frame)
-            ret, frame = cap.read()
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
+    out.write(frame)
+    ret, frame = cap.read()
 
 cap.release()
 out.release()
 cv2.destroyAllWindows()
-
