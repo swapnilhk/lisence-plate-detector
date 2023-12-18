@@ -6,6 +6,9 @@ sudo apt-get -y install python3-pip
 
 echo ">>>>>>>>>> Cloning lisence-plate-detector"
 git clone git@github.com:swapnilhk/lisence-plate-detector
+cd lisence-plate-detector
+git checkout implementation-using-yolov6
+cd ..
 
 echo ">>>>>>>>>> Getting dataset"
 python3 -m venv env
