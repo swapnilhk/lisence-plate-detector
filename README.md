@@ -3,6 +3,9 @@
 ## Prerequisites
 Python 3.7 - 3.10, PIP
 
+## Training and Detection Framework
+YOLOv6
+
 ## Python Virtual Environment Setup
 https://docs.voxel51.com/getting_started/virtualenv.html
 
@@ -11,7 +14,7 @@ https://storage.googleapis.com/openimages/web/index.html
 
 ### Dataset Format
 Google Open Images V7: https://docs.ultralytics.com/datasets/detect/open-images-v7/
-YoloV8: https://docs.ultralytics.com/datasets/detect/#ultralytics-yolo-format
+Yolo: https://docs.ultralytics.com/datasets/detect/#ultralytics-yolo-format
 
 ## FiftyOne Installation
 https://docs.voxel51.com/getting_started/install.html

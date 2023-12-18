@@ -4,22 +4,22 @@ import re
 from pathlib import Path
 import shutil
 
-SRC_DATASET_DIR = '/Users/sw20039189/fiftyone/open-images-v7'
-DEST_DATASET_DIR = SRC_DATASET_DIR+'/yolov8'
+SRC_DATASET_DIR = '~/fiftyone/open-images-v7'
+DEST_DATASET_DIR = SRC_DATASET_DIR+'/yolo'
 
 # remove given trailing character if it exists
 def removeTrailingCharacter(str, trailing_char_to_be_removed):
    if(str[-1]==trailing_char_to_be_removed):
      return str[:-1] 
 
-# add yolov8 fromat data to file
-def addYoloV8FormatDataToFile(split, match):
+# add yolo fromat data to file
+def addYoloFormatDataToFile(split, match):
   normalised_x = (float(match.group(3)) + float(match.group(4))) / 2
   normalised_y = (float(match.group(5)) + float(match.group(6))) / 2
   normalised_w = float(match.group(4)) - float(match.group(3))
   normalised_h = float(match.group(6)) - float(match.group(5))
-  with open(dataset_config['path']+'/labels/'+split+'/'+match.group(1)+'.txt', 'a') as yolov8_detections:
-    yolov8_detections.write(str(open_images_lable_name_to_yolo_class_index[match.group(2)])
+  with open(dataset_config['path']+'/labels/'+split+'/'+match.group(1)+'.txt', 'a') as yolo_detections:
+    yolo_detections.write(str(open_images_lable_name_to_yolo_class_index[match.group(2)])
       + ' ' + str(normalised_x)
       + ' ' + str(normalised_y)
       + ' ' + str(normalised_w)
@@ -47,16 +47,16 @@ if os.path.isdir(SRC_DATASET_DIR + '/test/data'):
   shutil.copytree(SRC_DATASET_DIR + '/test/data', dataset_config['path']+'/'+dataset_config['test'], copy_function=os.link)
 
 # invert the 'names' map in yolo dataset config
-inverted_yolov8_class_map={}
+inverted_yolo_class_map={}
 # create regex to extract LabelNames from metadate file
 metadata_expression  = ''
 for key, value in dataset_config['names'].items():
-   inverted_yolov8_class_map[value]=key
+   inverted_yolo_class_map[value]=key
    metadata_expression += value + '|'
 metadata_expression  =  removeTrailingCharacter(metadata_expression, '|')  # remove trailing '|' if it exists
 metadata_expression = '(.+),(' + metadata_expression + ')'
 
-# map containing google open api v7 LabelNames to yolov8 class indexs
+# map containing google open api v7 LabelNames to yolo class indexs
 open_images_lable_name_to_yolo_class_index={}
 # create regex subexpression to extract information from open images detections.csv file
 label_name_regex = ''
@@ -64,7 +64,7 @@ with open(SRC_DATASET_DIR + '/train/metadata/classes.csv', 'r') as open_images_v
   for line in open_images_v7_metadata:
         match = re.search(metadata_expression, line)
         if match:
-           open_images_lable_name_to_yolo_class_index[match.group(1)]=inverted_yolov8_class_map[match.group(2)]
+           open_images_lable_name_to_yolo_class_index[match.group(1)]=inverted_yolo_class_map[match.group(2)]
            label_name_regex += match.group(1) + '|'
   label_name_regex  =  removeTrailingCharacter(label_name_regex, '|')  # remove trailing '|' if it exists
 
@@ -81,7 +81,7 @@ for split in dataset_splits:
     image_id_regex += dataset_images_id + '|'
   image_id_regex  =  removeTrailingCharacter(image_id_regex, '|')  # remove trailing '|' if it exists
   detections_expression = '(' + image_id_regex +  '),\w+,('+label_name_regex+'),[\d.],(0\.\d+),(0\.\d+),(0\.\d+),(0\.\d+)'
-  # convert data to yolov8 format
+  # convert data to yolo format
   with open(SRC_DATASET_DIR + '/'+split+'/labels/detections.csv', 'r') as open_images_v7_detections:
     for line in open_images_v7_detections:
         # for efficieicy, match a smaller regex first before we go for full blown regex match
@@ -90,4 +90,4 @@ for split in dataset_splits:
           match = re.search(detections_expression, line)
           if match:
             print(match.group(0))
-            addYoloV8FormatDataToFile(split, match)
+            addYoloFormatDataToFile(split, match)

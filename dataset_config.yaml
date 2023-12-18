@@ -3,6 +3,8 @@ train: images/train
 val: images/validation
 #test: images/train
 
+is_coco: False
+
 # Classes
-names:
-  0: Vehicle registration plate
+nc: 1
+names: ['Vehicle registration plate']
