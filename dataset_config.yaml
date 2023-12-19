@@ -1,4 +1,4 @@
-path: /Users/sw20039189/fiftyone/open-images-v7/yolov8/data
+path: ~/fiftyone/open-images-v7/yolo/data
 train: images/train
 val: images/validation
 #test: images/train
@@ -7,4 +7,5 @@ is_coco: False
 
 # Classes
 nc: 1
-names: ['Vehicle registration plate']
+names:
+   0:  'Vehicle registration plate'
