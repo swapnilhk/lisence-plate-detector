@@ -25,6 +25,7 @@ deactivate
 
 echo ">>>>>>>>>> Converting dataset to yolo format"
 cd ../lisence-plate-detector
+pip3 install -r requirements.txt
 python3 convert_google_open_images_v7_to_yolo.py
 
 echo ">>>>>>>>>> Training data using Yolov6"
