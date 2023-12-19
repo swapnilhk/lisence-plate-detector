@@ -1,5 +1,4 @@
 import fiftyone as fo
-import fiftyone.zoo as foz
 
 dataset = fo.zoo.load_zoo_dataset(
     "open-images-v7",
@@ -8,3 +7,4 @@ dataset = fo.zoo.load_zoo_dataset(
     classes=["Vehicle registration plate"],
     max_samples=10,
 )
+session = fo.launch_app(dataset)
