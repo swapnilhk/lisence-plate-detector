@@ -7,4 +7,3 @@ dataset = fo.zoo.load_zoo_dataset(
     classes=["Vehicle registration plate"],
     max_samples=10,
 )
-session = fo.launch_app(dataset)

@@ -30,8 +30,18 @@ python3 convert_google_open_images_v7_to_yolo.py
 
 echo ">>>>>>>>>> Training data using Yolov6"
 cd ..
-git clone git@github.com:meituan/YOLOv6.git
+git clone https://github.com/meituan/YOLOv6.git
 cd YOLOv6
 pip3 install -r requirements.txt
 
-python3 tools/train.py --batch 32 --conf configs/yolov6s_finetune.py --data ../lisence-plate-detector/dataset_config.yaml --fuse_ab --device 0
+cd /usr/local/cuda/lib64
+sudo rm -f libcudnn*
+cd /usr/local/cuda/include
+sudo rm -f cudnn*
+
+# Train
+python3 tools/train.py --batch 16 --conf configs/yolov6s_finetune.py --data ~/dataset_config.yaml --fuse_ab --device 0 --epochs 10
+# Validate
+python3 tools/eval.py --data ~/dataset_config.yaml --weights runs/train/exp7/weights/best_ckpt.pt --task val --device 0
+# Tets
+python3 tools/infer.py --weights "runs/train/exp7/weights/best_ckpt.pt" --source .003a5aaf6d17c917.jpg --yaml ~/dataset_config.yaml --device 0
