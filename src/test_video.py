@@ -1,4 +1,3 @@
-# Credits: https://github.com/computervisioneng/train-yolov8-custom-dataset-step-by-step-guide/tree/master/local_env/predict_video.py
 import os
 import cv2
 import torch
@@ -8,7 +7,6 @@ from Yolov6Util import Yolov6Util
 from yolov6.utils.events import load_yaml
 from yolov6.core.inferer import Inferer
 from typing import List, Optional
-import PIL
 from yolov6.utils.nms import non_max_suppression
 
 device:str = "cpu" #@param ["gpu", "cpu"]
@@ -43,25 +41,25 @@ if device != 'cpu':
   model(torch.zeros(1, 3, *img_size).to(device).type_as(next(model.model.parameters())))  # warmup
 
 img_size = Yolov6Util.check_img_size(img_size, s=stride)
-img, img_src = Yolov6Util.process_image(frame, img_size, stride, half)
 
-img = img.to(device)
+while ret:
+  img, img_src = Yolov6Util.process_image(frame, img_size, stride, half)
 
-if len(img.shape) == 3:
-    img = img[None]
-    # expand for batch dim
-pred_results = model(img)
-classes:Optional[List[int]] = None # the classes to keep
-det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+  img = img.to(device)
 
-gn = torch.tensor(img_src.shape)[[1, 0, 1, 0]]  # normalization gain whwh
-img_ori = img_src.copy()
-if len(det):
-  det[:, :4] = Inferer.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
-  for *xyxy, conf, cls in reversed(det):
-      class_num = int(cls)
-      label = None if hide_labels else (class_names[class_num] if hide_conf else f'{class_names[class_num]} {conf:.2f}')
-      Inferer.plot_box_and_label(img_ori, max(round(sum(img_ori.shape) / 2 * 0.003), 2), xyxy, label, color=Inferer.generate_colors(class_num, True))
-dest_img = PIL.Image.fromarray(img_ori)
+  if len(img.shape) == 3:
+      img = img[None]
+      # expand for batch dim
+  pred_results = model(img)
+  classes:Optional[List[int]] = None # the classes to keep
+  det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
 
-dest_img.show()
+  if len(det):
+    det[:, :4] = Inferer.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
+    for x1, y1, x2, y2, conf, cls in reversed(det):
+        cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
+        class_num = int(cls)
+        cv2.putText(frame, class_names[class_num].upper(), (int(x1), int(y1 - 10)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
+  out.write(frame)
+  ret, frame = cap.read()
