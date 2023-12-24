@@ -5,7 +5,7 @@ import torch
 from yolov6.layers.common import DetectBackend
 from yolov6.core.inferer import Inferer
 from Yolov6Util import Yolov6Util
-from yolov6.utils.events import LOGGER, load_yaml
+from yolov6.utils.events import load_yaml
 from yolov6.core.inferer import Inferer
 from typing import List, Optional
 import PIL

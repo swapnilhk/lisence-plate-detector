@@ -8,6 +8,8 @@ sudo apt-get -y install git
 sudo apt-get -y install python3.10
 sudo apt-get -y install python3-pip
 sudo apt-get -y install python3-venv
+
+# Cloning license plate detector
 echo ">>>>>>>>>> Cloning lisence-plate-detector"
 ssh-keyscan "github.com" >> ~/.ssh/known_hosts
 git clone https://github.com/swapnilhk/lisence-plate-detector

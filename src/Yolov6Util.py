@@ -1,6 +1,5 @@
 import torch, math
 import numpy as np
-from yolov6.layers.common import DetectBackend
 from yolov6.data.data_augment import letterbox
 
 class Yolov6Util:
