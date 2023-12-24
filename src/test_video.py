@@ -21,7 +21,7 @@ agnostic_nms: bool = False #@param {type:"boolean"}
 hide_labels: bool = False #@param {type:"boolean"}
 hide_conf: bool = False #@param {type:"boolean"}
 
-VIDEOS_DIR = os.path.join('.', 'videos')
+VIDEOS_DIR = os.path.join('/Users/sw20039189/Movies/', 'videos')
 video_path = os.path.join(VIDEOS_DIR, 'traffic.mp4')
 video_path_out = '{}_out.mp4'.format(video_path)
 cap  = cv2.VideoCapture(video_path)
@@ -29,7 +29,7 @@ ret, frame = cap.read()
 H, W, _ = frame.shape
 out = cv2.VideoWriter(video_path_out, cv2.VideoWriter_fourcc(*'MP4V'), int(cap.get(cv2.CAP_PROP_FPS)), (W, H))
 
-model = DetectBackend(f"best_ckpt.pt", device=device)
+model = DetectBackend(f"license_plate_detector_ckpt.pt", device=device)
 stride = model.stride
 class_names = load_yaml("dataset_config.yaml")['names']
 

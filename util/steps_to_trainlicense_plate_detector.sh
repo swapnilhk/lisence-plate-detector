@@ -1,4 +1,8 @@
-echo ">>>>>>>>>>  Installing prerequisites"
+# Following are steps required to train a licence-plate detector model on a ubuntu platform
+# using youlv6
+
+# Installing prerequisites
+echo ">>>>>>>>>>  Installing prerequisites <<<<<<<<<<"
 sudo apt-get -y update
 sudo apt-get -y install git
 sudo apt-get -y install python3.10
@@ -12,7 +16,8 @@ git checkout implementation-using-yolov6
 git pull origin implementation-using-yolov6
 cd ..
 
-echo ">>>>>>>>>> Getting dataset"
+# Downloading dataset
+echo ">>>>>>>>>> Downloading dataset <<<<<<<<<<"
 mkdir env
 cd env
 python3 -m venv env
@@ -23,17 +28,20 @@ cp  ../lisence-plate-detector/download_dataset.py .
 python download_dataset.py
 deactivate
 
-echo ">>>>>>>>>> Converting dataset to yolo format"
+# Converting dataset to yolo format
+echo ">>>>>>>>>> Converting dataset to yolo format <<<<<<<<<<"
 cd ../lisence-plate-detector
 pip3 install -r requirements.txt
 python3 convert_google_open_images_v7_to_yolo.py
 
-echo ">>>>>>>>>> Training data using Yolov6"
+# Training data using Yolov6
+echo ">>>>>>>>>> Training data using Yolov6 <<<<<<<<<<"
 cd ..
 git clone https://github.com/meituan/YOLOv6.git
 cd YOLOv6
 pip3 install -r requirements.txt
 
+# Following steps were  added to fix CUDA related errors. This step might not be required
 cd /usr/local/cuda/lib64
 sudo rm -f libcudnn*
 cd /usr/local/cuda/include
