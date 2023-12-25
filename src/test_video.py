@@ -16,13 +16,10 @@ ret, frame = cap.read()
 H, W, _ = frame.shape
 out = cv2.VideoWriter(video_path_out, cv2.VideoWriter_fourcc(*'MP4V'), int(cap.get(cv2.CAP_PROP_FPS)), (W, H))
 
-model = DetectBackend(f"license_plate_detector_ckpt.pt", device=device)
-stride = model.stride
 class_names = load_yaml("dataset_config.yaml")['names']
 
-img_size = ImageProcessor.check_img_size(img_size, s=stride)
-
-frameProcessor = FrameProcessor(img_size, stride, half,  device, model)
+model = DetectBackend(f"license_plate_detector_ckpt.pt", device=device)
+frameProcessor = FrameProcessor(img_size, half,  device, model)
 
 while ret:
   for x1, y1, x2, y2, conf, cls in frameProcessor.process_frame(frame):

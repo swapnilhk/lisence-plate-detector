@@ -43,10 +43,10 @@ class ImageProcessor:
     return image, img_src
 
 class FrameProcessor:
-  def __init__(self, img_size, stride, half, device, model):
+  def __init__(self, img_size, half, device, model):
     self.model = model
-    self.img_size = img_size
-    self.stride = stride
+    self.stride = self.model.stride
+    self.img_size = ImageProcessor.check_img_size(img_size, s=self.stride)
     cuda = device != 'cpu' and torch.cuda.is_available()
     self.device = torch.device('cuda:0' if cuda else 'cpu')
     if half & (device != 'cpu'):
@@ -54,7 +54,7 @@ class FrameProcessor:
     else:
       self.model.model.float()
       self.half = False
-    self.model(torch.zeros(1, 3, *img_size).to(device).type_as(next(model.model.parameters())))  # warmup
+    self.model(torch.zeros(1, 3, *self.img_size).to(self.device).type_as(next(self.model.model.parameters())))  # warmup
                 
   def process_frame(self, frame):
     detections = []
