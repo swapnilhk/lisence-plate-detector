@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Vehicle Registration Plate Detector
+  description: |
+    This API is responsible for detecting all vehicle registration plates from an image
+  version: 1.0.0
+paths:
+  /detections:
+    post:
+      description: |
+        This endpoint recieves the image id representing images stored in storage such as
+        Colud Storage and finds the co-ordinates of all lisence plates present in the image.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+            example:
+              - "81910288273938"
+              - "81910288273938"
+              - "81910288273938"
+      responses:
+        200:
+          description: Detection successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationPlateDetectionResponse'
+              example:
+                - imageId: "81910288273938"
+                  registrationPlate: 
+                    - registrationPlateIndex: 1
+                      registrationPlateCoordinates:
+                        x1: 0.345
+                        y1: 0.445
+                        x2: 0.645
+                        y2: 0.945
+                    - registrationPlateIndex: 2
+                      registrationPlateCoordinates:
+                        x1: 0.817
+                        y1: 0.263
+                        x2: 0.028
+                        y2: 0.293
+                - imageId: "67628293737736"
+                  registrationPlate: 
+                    - registrationPlateIndex: 1
+                      registrationPlateCoordinates:
+                        x1: 0.283
+                        y1: 0.455
+                        x2: 0.234
+                        y2: 0.345
+        400:
+          description: Received invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: Image id must be provided
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: Issue occured while fetching image from Cloud Storage
+
+components:
+  schemas:
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    RegistrationPlateDetectionResponse:
+      description: Details of the image to be interprited
+      type: array
+      items:
+        type: object
+        properties:
+          imageId:
+            description: Id with which image can be identified in the source such as Cloud Storage
+            type: string
+          registrationPlate:
+            description: Details of allt the registration plates present in the image
+            type: array
+            items:
+              type: object
+              properties:
+                registrationPlateIndex:
+                  description: The index with which this object can be identified inside the containing array
+                  type: integer
+                registrationPlateCoordinates:
+                  type: object
+                  description: Coordinates of registration plate within the image
+                  properties:
+                    x1:
+                      type: number
+                    x2:
+                      type: number
+                    y1:
+                      type: number
+                    y2:
+                      type: number
+                  required:
+                    - x1
+                    - x2
+                    - y1
+                    - y2
+              required:
+                - registrationPlateIndex
+                - registrationPlateCoordinates
+        required:
+          - imageId
+          - registrationPlate
