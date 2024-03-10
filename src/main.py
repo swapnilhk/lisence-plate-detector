@@ -28,7 +28,6 @@ def detectVehicleRegistrationPlate():
         image = np.asarray(bytearray(resp.read()), dtype="uint8") 
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         registrationPlateIndex = 1
-        registrationPlate = list()
         for x1, y1, x2, y2, conf, _ in frameProcessor.process_frame(image):
           if float(conf) > 0.5:
             registrationPlateItem =  dict()
@@ -39,10 +38,9 @@ def detectVehicleRegistrationPlate():
             registrationPlateItem['registrationPlateCoordinates']['y1'] = int(y1.item())
             registrationPlateItem['registrationPlateCoordinates']['x2'] = int(x2.item())
             registrationPlateItem['registrationPlateCoordinates']['y2'] = int(y2.item())
-            registrationPlate.append(registrationPlateItem)
-        response_data['registrationPlate'].append(registrationPlate)
+            response_data['registrationPlate'].append(registrationPlateItem)
     except Exception as ex:
-       raise BadRequest(description='Exception occured: {}. {} while processing {}.'.format(type(ex).__name__, ex, request_data))
+       raise BadRequest(description='Exception occured: {}. {} while processing {}.'.format(type(ex).__name__, ex, imageId))
     response.append(response_data)
   return app.make_response((response, 200))
 
@@ -60,4 +58,4 @@ def handle_internal_server_error(error):
 
 if __name__ == "__main__":
     from waitress import serve
-    serve(app, host="0.0.0.0", port=8081)
+    serve(app, host="0.0.0.0", port=8080)
